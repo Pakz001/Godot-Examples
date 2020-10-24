@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Enemy/Enemy.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Player/Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Enemy/Enemy.gd" type="Script" id=4]
+
+[node name="World" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource( 3 )]
+position = Vector2( 313.453, 417.578 )
+scale = Vector2( 3, 3 )
+speed = 400
+
+[node name="Enemy" parent="." instance=ExtResource( 1 )]
+position = Vector2( 145.572, 31.6961 )
+scale = Vector2( 3, 3 )
+script = ExtResource( 4 )

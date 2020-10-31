@@ -18,3 +18,13 @@ func _physics_process(delta):
 	if(collidedObject):
 		collidedObject.get_collider().queue_free()
 		queue_free()
+
+
+#
+# This is from the visibility notifier2d. It is linked from the node tab
+# and the screen exited line(clicked) to bullet. It frees the bullet from
+# the game so it no longer requires resources.
+#
+func _on_VisibilityNotifier2D_screen_exited():
+	queue_free() #remove our bullet since it no longer works
+	#pass # Replace with function body.

@@ -7,3 +7,5 @@ Donations :  https://www.paypal.me/RudyvanEtten/
 
 <br><br>
 My other hobby : https://soundcloud.com/pakz001
+<br>
+https://pixelart001.blogspot.com/

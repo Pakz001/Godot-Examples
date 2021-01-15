@@ -1,0 +1,65 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://player/Player.gd" type="Script" id=1]
+[ext_resource path="res://player/abilities/shoot/ShootingRayCast.tscn" type="PackedScene" id=2]
+[ext_resource path="res://player/abilities/grab/GrabRayCast.tscn" type="PackedScene" id=3]
+[ext_resource path="res://player/abilities/hook/HookRayCast.tscn" type="PackedScene" id=4]
+[ext_resource path="res://player/abilities/spawn_object/SpawnObjectRaycast.tscn" type="PackedScene" id=5]
+[ext_resource path="res://player/abilities/flashlight/FlashLight.tscn" type="PackedScene" id=6]
+[ext_resource path="res://player/abilities/footstep/FootstepSound.tscn" type="PackedScene" id=7]
+[ext_resource path="res://player/abilities/laser/Laser.tscn" type="PackedScene" id=8]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 0.5
+height = 0.5
+
+[sub_resource type="CapsuleMesh" id=2]
+radius = 0.5
+
+[sub_resource type="CylinderMesh" id=3]
+top_radius = 0.05
+bottom_radius = 0.1
+height = 0.5
+
+[node name="Player" type="KinematicBody" groups=[
+"Player",
+]]
+script = ExtResource( 1 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 0, 0 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 0, 0 )
+mesh = SubResource( 2 )
+material/0 = null
+
+[node name="Head" type="Position3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0 )
+
+[node name="Camera" type="Camera" parent="Head"]
+cull_mask = 2147483649
+current = true
+far = 1000.0
+
+[node name="DirectionIndicator" type="MeshInstance" parent="Head"]
+transform = Transform( 1, 0, 0, 0, -1.62921e-07, 1, 0, -1, -1.62921e-07, 0, 0, -0.5 )
+layers = 2
+cast_shadow = 0
+mesh = SubResource( 3 )
+material/0 = null
+
+[node name="ShootRayCast" parent="Head" instance=ExtResource( 2 )]
+
+[node name="GrabRayCast" parent="Head" instance=ExtResource( 3 )]
+
+[node name="HookRayCast" parent="Head" instance=ExtResource( 4 )]
+
+[node name="SpawnObject" parent="Head" instance=ExtResource( 5 )]
+
+[node name="FlashLight" parent="Head" instance=ExtResource( 6 )]
+
+[node name="Laser" parent="Head" instance=ExtResource( 8 )]
+
+[node name="FootstepSound" parent="Head" instance=ExtResource( 7 )]

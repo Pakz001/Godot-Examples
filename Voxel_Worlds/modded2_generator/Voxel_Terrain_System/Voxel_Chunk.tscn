@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Voxel_Terrain_System/Voxel_Chunk.gd" type="Script" id=1]
+[ext_resource path="res://Voxel_Terrain_System/2D_Assets/Tileset.png" type="Texture" id=2]
+[ext_resource path="res://Voxel_Terrain_System/2D_Assets/Tileset_NormalMap.png" type="Texture" id=3]
+
+
+[sub_resource type="SpatialMaterial" id=1]
+albedo_texture = ExtResource( 2 )
+roughness_texture_channel = 4
+normal_enabled = true
+normal_scale = 1.0
+normal_texture = ExtResource( 3 )
+
+[node name="Voxel_Chunk" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+material_override = SubResource( 1 )
+
+[node name="StaticBody" type="StaticBody" parent="."]
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]

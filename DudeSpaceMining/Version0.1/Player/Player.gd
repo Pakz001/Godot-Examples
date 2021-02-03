@@ -5,10 +5,15 @@ export (float) var rotation_speed = 3.5
 
 var velocity = Vector2()
 var rotation_dir = 0
-
+var banana=1
 const Speed = 100
 
+var pickup := preload("res://Pickup/Pickup.tscn")
 var bullet := preload("res://Bullet/Bullet.tscn")
+#var Mybullet := preload("res://Bullet/Mybullet.tscn")
+
+var started = false
+
 
 func get_input():
 	rotation_dir = 0
@@ -35,35 +40,23 @@ func get_input():
 		get_tree().get_root().add_child(bulletInstance)
 
 func _physics_process(delta):
+	
+	if started==false :
+		start()
+		started=true
+
 	get_input()
 	rotation += rotation_dir * rotation_speed * delta
 	velocity = move_and_slide(velocity)
+
+func start():
+	for i in range(0,100,32):
+		var pickupInstance = pickup.instance()
+		pickupInstance.position = Vector2(position.x+100+i,position.y)		
+		get_tree().get_root().add_child(pickupInstance)
 
 func _ready():
 	
 	pass # Replace with function body.
 
-func old_physics_process(delta):
-	var direction = Vector2()
-	
-	rotation+=.05
-	
-	
-	var velocity = Speed * delta
-	
-	if Input.is_action_pressed("ui_left"):
-		direction.x -= velocity
-	if Input.is_action_pressed("ui_right"):
-		direction.x += velocity
-	
-	if Input.is_action_pressed("ui_up"):
-		direction.y -= velocity
-	
-	if Input.is_action_pressed("ui_down"):
-		direction.y += velocity
-		
-	var collide = move_and_collide(direction)
-	#if collide:
-	#	print("collided with: ", collide.collider.name)
-		#handle_collision(collide)
 

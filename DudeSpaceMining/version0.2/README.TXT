@@ -14,3 +14,4 @@ a function that returns true if the x,y spot on the atlas may be removed.
 
 Bugs :
 The bullets seem to fly off the screen and fly back into the screen from the other side.
+The pickups sometimes get pushed away...

@@ -1,6 +1,8 @@
 # Godot-Examples
 Hoping to fill this repo up with hundreds of projects.
 
+I started experimenting with creating notes as pdf files. I'm currently placing these in the getting started/pdf folder. Maybe I can try to make them look like books. I wil try to use a lot of images.
+
 QUICKSTART:
 To start coding in Godot. Start a new project. Add a Node2D to the scene. Add a script. 
 Press compile and select the scene as that script you saved. You can now code using the script.

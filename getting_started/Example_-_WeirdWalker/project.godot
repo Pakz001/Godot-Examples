@@ -16,6 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="VectorArray"
+run/main_scene="res://Node2D.tscn"
 config/icon="res://icon.png"
 
 [rendering]

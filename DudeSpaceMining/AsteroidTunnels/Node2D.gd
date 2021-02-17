@@ -10,8 +10,8 @@ extends Node2D
 
 var time=0
 # map is the map we end up with , that with the maze like thing
-var mapwidth = 196
-var mapheight = 196
+var mapwidth = 256
+var mapheight = 256
 var map = []
 
 var proj = []
@@ -71,6 +71,43 @@ func splode():
 				break
 	floodfill(1,1,10)
 	#
+	# Here we grow the edges randomly
+	for i in range(mapwidth*mapwidth*1):
+		var x1 = int(rand_range(1,mapwidth-1))
+		var y1 = int(rand_range(1,mapheight-1))
+		if(map[x1][y1]==10):
+			
+			if(map[x1-1][y1]==1 || map[x1+1][y1]==1 || map[x1][y1-1]==1 || map[x1+1][y1+1]==1 || map[x1-1][y1]==20 || map[x1+1][y1]==20 || map[x1][y1-1]==20 || map[x1+1][y1+1]==20):				
+				map[x1][y1]=20
+	# Here we loop through the map and fill in edges
+	
+	var start = false
+	for x1 in range(5,mapwidth-5):
+		var list = []
+		start=false
+		for y1 in range(5,mapheight-5):
+			if(map[x1][y1]==20 && map[x1][y1+1]==10 && start==false):
+				start=true
+			if(start==true && map[x1][y1]==10):
+				list.append(Vector2(x1,y1))
+			if(map[x1][y1+1]==20 && start==true):
+				for i in range(list.size()):
+					map[list[i].x][list[i].y]=20				
+				start=false
+	start = false
+	for y1 in range(5,mapheight-5):
+		var list = []
+		start=false
+		for x1 in range(5,mapwidth-5):
+			if(map[x1][y1]==20 && map[x1+1][y1]==10 && start==false):
+				start=true
+			if(start==true && map[x1][y1]==10):
+				list.append(Vector2(x1,y1))
+			if(map[x1+1][y1]==20 && start==true):
+				for i in range(list.size()):
+					map[list[i].x][list[i].y]=20				
+				start=false
+	# Here we grow the edges randomly
 	for i in range(mapwidth*mapwidth*3):
 		var x1 = int(rand_range(1,mapwidth-1))
 		var y1 = int(rand_range(1,mapheight-1))
@@ -78,6 +115,7 @@ func splode():
 			
 			if(map[x1-1][y1]==1 || map[x1+1][y1]==1 || map[x1][y1-1]==1 || map[x1+1][y1+1]==1 || map[x1-1][y1]==20 || map[x1+1][y1]==20 || map[x1][y1-1]==20 || map[x1+1][y1+1]==20):				
 				map[x1][y1]=20
+
 	pass
 
 

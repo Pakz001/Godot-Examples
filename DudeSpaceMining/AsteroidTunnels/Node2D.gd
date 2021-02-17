@@ -4,6 +4,8 @@
 #
 # TODO : Convex hull??, make tunnels accessable
 #
+# Note : The floodfill needs a append and not the push_front. This push_front
+# makes godot shift the array every time I think and this slows it down a lot.FIXED
 
 
 extends Node2D
@@ -121,7 +123,7 @@ func splode():
 
 func _process(delta):
 	time+=1
-	if time>100:
+	if time>10:
 		time=0
 		splode()
 		
@@ -155,22 +157,22 @@ func floodfill(x,y,val):
 	# while there is something on the list
 	while(!list.empty()):
 		# get our current cell inside these variables x1 and y1
-		var x1 = list[0].x
-		var y1 = list[0].y
+		var x1 = list[list.size()-1].x
+		var y1 = list[list.size()-1].y
 		# flood the map on x1 and y1
 		map[x1][y1]=val
 		# remove the current cell from the list
-		list.pop_front()
+		list.pop_back()
 		# Here we check above/left/right/down our current x1 y1
 		# position if we can flood there and if so add this to the list.
 		# We make sure first to not check outside our map[][] area
 		if(y1-1>=0 && map[x1][y1-1]==floodme):
-			list.push_front(Vector2(x1,y1-1))
+			list.append(Vector2(x1,y1-1))
 		if(y1+1<mapheight && map[x1][y1+1]==floodme):
-			list.push_front(Vector2(x1,y1+1))
+			list.append(Vector2(x1,y1+1))
 		if(x1-1>=0 && map[x1-1][y1]==floodme):
-			list.push_front(Vector2(x1-1,y1))
+			list.append(Vector2(x1-1,y1))
 		if(x1+1<mapwidth && map[x1+1][y1]==floodme):
-			list.push_front(Vector2(x1+1,y1))
+			list.append(Vector2(x1+1,y1))
 
 	pass

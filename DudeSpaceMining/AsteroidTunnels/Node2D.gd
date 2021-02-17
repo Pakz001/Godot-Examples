@@ -2,7 +2,7 @@
 # A test to see if I can create interesting insides of a asteroid
 # of my dudespacemining game.
 #
-#
+# TODO : Convex hull??, make tunnels accessable
 #
 
 
@@ -10,8 +10,8 @@ extends Node2D
 
 var time=0
 # map is the map we end up with , that with the maze like thing
-var mapwidth = 256
-var mapheight = 256
+var mapwidth = 196
+var mapheight = 196
 var map = []
 
 var proj = []
@@ -56,7 +56,7 @@ func splode():
 			y+=sin(a)*1
 			if(rand_range(0,10)<2):
 				a+=rand_range(-PI/2,PI/2)
-			if(x>0 && x<mapwidth && y>0 && y<mapheight):			
+			if(x>16 && x<mapwidth-16 && y>16 && y<mapheight-16):			
 				if(add<8 && i==int(l-2)):				
 					proj.push_front(Vector2(x,y))
 					projangle.push_front(rand_range(-TAU,TAU))
@@ -65,10 +65,19 @@ func splode():
 					brushsize=rand_range(1,3)
 				for y1 in range(-brushsize,brushsize):
 					for x1 in range(-brushsize,brushsize):
-						if(x+x1<0 || x+x1>=mapwidth || y+y1<0 || y+y1>=mapheight):continue
+						if(x+x1<16 || x+x1>=mapwidth-16 || y+y1<16 || y+y1>=mapheight-16):continue
 						map[int(x+x1)][int(y+y1)]=1
 			else:
 				break
+	floodfill(1,1,10)
+	#
+	for i in range(mapwidth*mapwidth*3):
+		var x1 = int(rand_range(1,mapwidth-1))
+		var y1 = int(rand_range(1,mapheight-1))
+		if(map[x1][y1]==10):
+			
+			if(map[x1-1][y1]==1 || map[x1+1][y1]==1 || map[x1][y1-1]==1 || map[x1+1][y1+1]==1 || map[x1-1][y1]==20 || map[x1+1][y1]==20 || map[x1][y1-1]==20 || map[x1+1][y1+1]==20):				
+				map[x1][y1]=20
 	pass
 
 
@@ -88,7 +97,42 @@ func _draw():
 	#Here we draw the map
 	for y in range(0,mapheight):
 		for x in range(0,mapwidth):
+			if(map[x][y]==20 || map[x][y]==0):
+				draw_rect(Rect2(Vector2(x*2,y*2),Vector2(2,2)),Color(.7,.5,0,1))
 			if(map[x][y]==1):
-				draw_rect(Rect2(Vector2(x*2,y*2),Vector2(2,2)),Color(1,1,1,1))
+				draw_rect(Rect2(Vector2(x*2,y*2),Vector2(2,2)),Color(.2,.05,0,1))
+			if(map[x][y]==10):
+				draw_rect(Rect2(Vector2(x*2,y*2),Vector2(2,2)),Color(0,0,0,1))
 	
+	pass
+
+func floodfill(x,y,val):
+	# this is the value which we going to flood over
+	var floodme = map[x][y]
+	# this is our flood list. It contains and will contain each floodable
+	# cell
+	var list = []
+	# put the start cell on the list
+	list.append(Vector2(x,y))
+	# while there is something on the list
+	while(!list.empty()):
+		# get our current cell inside these variables x1 and y1
+		var x1 = list[0].x
+		var y1 = list[0].y
+		# flood the map on x1 and y1
+		map[x1][y1]=val
+		# remove the current cell from the list
+		list.pop_front()
+		# Here we check above/left/right/down our current x1 y1
+		# position if we can flood there and if so add this to the list.
+		# We make sure first to not check outside our map[][] area
+		if(y1-1>=0 && map[x1][y1-1]==floodme):
+			list.push_front(Vector2(x1,y1-1))
+		if(y1+1<mapheight && map[x1][y1+1]==floodme):
+			list.push_front(Vector2(x1,y1+1))
+		if(x1-1>=0 && map[x1-1][y1]==floodme):
+			list.push_front(Vector2(x1-1,y1))
+		if(x1+1<mapwidth && map[x1+1][y1]==floodme):
+			list.push_front(Vector2(x1+1,y1))
+
 	pass

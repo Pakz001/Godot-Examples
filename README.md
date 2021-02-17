@@ -8,6 +8,8 @@ To start coding in Godot. Start a new project. Add a Node2D to the scene. Add a 
 Press compile and select the scene as that script you saved. You can now code using the script.
 Screen size can be set in the config.
 
+Here is Godot as a Web App. I have not tested everything I made in it but what I tested worked straight from the browser.
+https://godotengine.org/editor
 
 Using the Steam version of Godot Version : jan2021
 

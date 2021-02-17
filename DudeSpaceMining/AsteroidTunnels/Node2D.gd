@@ -1,141 +1,94 @@
+#
+# A test to see if I can create interesting insides of a asteroid
+# of my dudespacemining game.
+#
+#
+#
+
+
 extends Node2D
 
-
-# array hold a path of the walker
-var array = []
+var time=0
 # map is the map we end up with , that with the maze like thing
+var mapwidth = 256
+var mapheight = 256
 var map = []
+
+var proj = []
+var projangle = []
+var projlen = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
 	# first we create our map array[][]
-	for x in range(0,20):
+	for x in range(0,mapwidth):
 		map.append([])
 		map[x] = []
-		for y in range(0,20):
+		for y in range(0,mapheight):
 			map[x].append([])
 			map[x][y] = 0
-	# Our x and y variables hold the position of our walker			
-	var x = 0
-	var y = 0
-	# map value of one is a wall or walkable area
-	map[x][y]=1
-	# when we get a high countout we then backtrack our path
-	var countout = 0
-	# olddir and oldval holds our previous direction(for longer hallways)
-	var olddir
-	var oldval
-	var start=true
-	# We want to loop enough to fill the map(20*20 cells)
-	for i in range(0,20*20*8):
-		
-		# oldx/y holds our position we can use to reset to if we fail our current step
-		var oldx = x
-		var oldy = y
-		# stepx/y checks one step ahead
-		var stepx = x
-		var stepy = y
-		# direction 1 is horizontal and 2 is vertical		
-		var dir
-		# val holds our direction -1 or 1
-		var val
-
-		# we first restore our previous direction
-		val = oldval
-		dir = olddir
-		
-		# if we are in the first step or when we want to head into a random direction
-		if(start==true || rand_range(0,10)<5):
-			start=false
-			if(rand_range(0,10)<5):
-				val=-1
-			else:
-				val=1
-			if(rand_range(0,10)<5):
-				dir=1
-			else:
-				dir=2
-
-		# Chose if we want to move horizontal or vertical	
-		if(dir==1):			
-			x+=val
-			stepx +=(val*2)
-		else:			
-			y+=val
-			stepy += (val*2)
-			
-			
-		# variable go is used to cancel or go ahead with our path		
-		var go = true
-		
-		# if we step outside of the map then restore position and cancel the current step
-		if(x<0 || y<0 || x>=20 || y>=20):
-			x = oldx
-			y = oldy
-			go=false			
-		# if our check ahead is outside the map then we do not check that
-		if(stepx<0 || stepy<0 || stepx>=20 || stepy>=20):					
-			stepx = x
-			stepy = y
-		# if our step ahead inside the map is already taken than fail!
-		if(map[stepx][stepy]==1):
-			go=false
-		# if our direction is horizontal check above and below/left and right if nothing is there yet(fail!)	
-		# also check if our step ahead has no walkables above/left/right/down of it.	
-		if(dir==1):
-			if(y-1>=0 && map[x][y-1]==1):
-				go=false
-			if(y+1<20 && map[x][y+1]==1):
-				go=false				
-			if(stepy-1>=0 && map[stepx][stepy-1]==1):
-				go=false
-			if(stepy+1<20 && map[stepx][stepy+1]==1):
-				go=false				
-
-		if(dir==2):
-			if(x-1>=0 && map[x-1][y]==1):
-				go=false
-			if(x+1<20 && map[x+1][y]==1):
-				go=false				
-			if(stepx-1>=0 && map[stepx-1][stepy]==1):
-				go=false
-			if(stepx+1<20 && map[stepx+1][stepy]==1):
-				go=false				
-
-		# if nothing is wrong then push the current position to the array
-		# and put it on the map. Reset the countout since we succeeded.
-		# if we failed then restore our old position and increase our 
-		# backtrack trigger counter
-		if go==true:
-			array.push_front(Vector2(x,y))
-			map[x][y]=1
-			countout=0
-			olddir = dir
-			oldval = val
-		else:
-			x = oldx
-			y = oldy
-			olddir = dir
-			oldval = val
-			countout+=1
-		# if our backtracking counter is above 5 then reset this counter
-		# and backtrack on our path and put the previous position in the
-		# x and y variables for the next round.
-		if(countout>5):
-			countout=0
-			if(array.size()>1):
-				array.pop_front()
-				x = array[0].x
-				y = array[0].y
+	splode()
 	pass # Replace with function body.
 
+func splode():
+	
+	for y in range(mapheight):
+		for x in range(mapwidth):
+			map[x][y]=0
+			
+	for i in range(6):
+		proj.append(Vector2(mapwidth/2,mapheight/2))
+		projangle.append(rand_range(0,PI*2.0))
+		projlen.append(mapwidth)
+	var brushsize=1
+	while(!proj.empty()):
+		var x = proj[0].x
+		var y = proj[0].y
+		var l = projlen[0]
+		var a = projangle[0]
+		proj.pop_front()
+		projlen.pop_front()
+		projangle.pop_front()
+		var add = rand_range(0,10)	
+		for i in range(l):
+			x+=cos(a)*1
+			y+=sin(a)*1
+			if(rand_range(0,10)<2):
+				a+=rand_range(-PI/2,PI/2)
+			if(x>0 && x<mapwidth && y>0 && y<mapheight):			
+				if(add<8 && i==int(l-2)):				
+					proj.push_front(Vector2(x,y))
+					projangle.push_front(rand_range(-TAU,TAU))
+					projlen	.push_front(rand_range(2,mapwidth))
+				if(rand_range(0,10)<1):
+					brushsize=rand_range(1,3)
+				for y1 in range(-brushsize,brushsize):
+					for x1 in range(-brushsize,brushsize):
+						if(x+x1<0 || x+x1>=mapwidth || y+y1<0 || y+y1>=mapheight):continue
+						map[int(x+x1)][int(y+y1)]=1
+			else:
+				break
+	pass
+
+
+func _process(delta):
+	time+=1
+	if time>100:
+		time=0
+		splode()
+		
+	# Note this update()
+	# It makes sure the _draw function gets updated every frame
+	#
+	update()
+	pass	
 
 func _draw():
 	#Here we draw the map
-	for y in range(0,20):
-		for x in range(0,20):
+	for y in range(0,mapheight):
+		for x in range(0,mapwidth):
 			if(map[x][y]==1):
-				draw_rect(Rect2(Vector2(x*16,y*16),Vector2(16,16)),Color(1,1,1,1))
+				draw_rect(Rect2(Vector2(x*2,y*2),Vector2(2,2)),Color(1,1,1,1))
 	
 	pass
